@@ -13,7 +13,7 @@ import java.time.LocalTime;
 @NoArgsConstructor
 @Data
 @Entity
-public class LaunchpadUser {
+public class User {
 
 
     @Id
@@ -32,6 +32,9 @@ public class LaunchpadUser {
 
     @NotNull
     private LocalDateTime modified;
+
+    @OneToOne
+    private Launchpad launchpad;
 
     @PrePersist
     public void created() {
