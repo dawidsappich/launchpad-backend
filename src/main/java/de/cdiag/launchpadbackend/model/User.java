@@ -36,6 +36,11 @@ public class User {
     @OneToOne
     private Launchpad launchpad;
 
+    public User(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
     @PrePersist
     public void created() {
         this.created = LocalDateTime.now();
