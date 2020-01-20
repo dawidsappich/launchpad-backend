@@ -1,0 +1,5 @@
+GET http://localhost:8080/user/hello
+Accept: application/json
+Authorization: Basic d1a4582a-d0b3-4ba8-8a28-d2e84799cd4b
+
+###
