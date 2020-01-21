@@ -29,6 +29,7 @@ public class LaunchpadBackendApplication {
         return args -> {
 
             final Launchpad launchpad = new Launchpad();
+            launchpad.setTitle("MyHome");
             final Template template = new Template("generic", "template for business applications");
             launchpad.setTemplate(template);
 
@@ -46,6 +47,7 @@ public class LaunchpadBackendApplication {
             // OK bis hierhin
 
             final Tile invoiceTile = new Tile("my invoices", "all invoices in progress", invoices);
+            invoiceTile.setIcon("invoice-icon");
             // set relationship to launchpad
             invoiceTile.setLaunchpad(launchpad);
             Set<Tile> tiles = new HashSet<>();
