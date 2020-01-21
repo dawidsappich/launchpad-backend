@@ -1,14 +1,18 @@
 package de.cdiag.launchpadbackend.model;
 
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
+@JsonIgnoreProperties({"launchpad"})
 @Entity
 public class Tile {
 

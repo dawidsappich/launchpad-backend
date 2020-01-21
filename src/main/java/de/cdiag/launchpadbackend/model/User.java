@@ -1,17 +1,17 @@
 package de.cdiag.launchpadbackend.model;
 
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.extern.apachecommons.CommonsLog;
+import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 @Entity
 public class User {
 
