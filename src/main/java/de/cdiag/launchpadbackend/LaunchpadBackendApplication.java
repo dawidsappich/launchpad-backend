@@ -44,8 +44,6 @@ public class LaunchpadBackendApplication {
 
             template.setApplications(apps);
 
-            // OK bis hierhin
-
             final Tile invoiceTile = new Tile("my invoices", "all invoices in progress", invoices);
             invoiceTile.setIcon("invoice-icon");
             // set relationship to launchpad

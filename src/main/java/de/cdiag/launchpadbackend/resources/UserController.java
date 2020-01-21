@@ -13,12 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class UserController {
 
-    private final UserService userService;
-
-    public UserController(final UserService userService) {
-        this.userService = userService;
-    }
-
     @GetMapping("login")
     public ResponseEntity<HttpStatus> login() {
         // http basic auth is handled in auth provider
