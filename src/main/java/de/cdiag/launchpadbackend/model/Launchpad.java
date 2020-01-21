@@ -1,6 +1,7 @@
 package de.cdiag.launchpadbackend.model;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -9,6 +10,7 @@ import java.util.Set;
 
 @NoArgsConstructor
 @Data
+@EqualsAndHashCode(exclude = "tiles")
 @Entity
 public class Launchpad {
 
@@ -20,7 +22,7 @@ public class Launchpad {
     @OneToOne(cascade = CascadeType.ALL)
     private Template template;
 
-    @OneToMany(mappedBy = "launchpad")
+    @OneToMany(mappedBy = "launchpad", cascade = CascadeType.ALL)
     private Set<Tile> tiles;
 
     @OneToOne(mappedBy = "launchpad")

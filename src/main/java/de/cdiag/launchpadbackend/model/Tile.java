@@ -26,7 +26,7 @@ public class Tile {
     @OneToOne(cascade = CascadeType.ALL)
     private App application;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private Launchpad launchpad;
 
     public Tile(String title, String description, App application) {
