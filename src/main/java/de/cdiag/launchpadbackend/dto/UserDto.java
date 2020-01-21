@@ -1,4 +1,4 @@
-package de.cdiag.launchpadbackend.model;
+package de.cdiag.launchpadbackend.dto;
 
 import lombok.Data;
 

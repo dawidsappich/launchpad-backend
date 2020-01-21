@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -76,4 +77,9 @@ public class UserService implements UserDetailsService {
         return passwordEncoder().matches(rawPassword, userPassword);
     }
 
+    public Iterable<? extends User> save(List<? extends User> users) {
+        // hash all passwords
+        users.forEach(user -> user.setPassword(encodePassword(user.getPassword())));
+        return userRepository.saveAll(users);
+    }
 }
