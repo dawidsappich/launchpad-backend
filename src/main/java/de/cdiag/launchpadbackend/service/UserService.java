@@ -62,15 +62,18 @@ public class UserService implements UserDetailsService {
                 .build();
     }
 
-    public boolean matches(final String username, final String providedPassword) {
+    public boolean matches(final String username, final String rawPassword) {
         Optional<User> byUsername = userRepository.findByUsername(username);
 
         if (byUsername.isEmpty()) {
             return false;
         }
 
-        @NotNull @NotBlank final String password = byUsername.get().getPassword();
-        return passwordEncoder().matches(password, encodePassword(providedPassword));
+        @NotNull @NotBlank final String userPassword = byUsername.get().getPassword();
+        // delegate the comparison to the password encoder
+        // compare the raw password (not encoded) with the hashed password
+        // passwordencoder will select the right encoder for comparision
+        return passwordEncoder().matches(rawPassword, userPassword);
     }
 
 }
