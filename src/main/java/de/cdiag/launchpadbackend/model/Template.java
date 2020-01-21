@@ -14,8 +14,8 @@ import java.util.Set;
 public class Template {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
     @NotNull @NotBlank
     private String templateName;

@@ -12,8 +12,8 @@ import java.util.Set;
 public class App {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
     private String appName;
 
@@ -25,4 +25,8 @@ public class App {
     @OneToOne(mappedBy = "application")
     private Tile tile;
 
+    public App(String appName, String appDescription) {
+        this.appName = appName;
+        this.appDescription = appDescription;
+    }
 }

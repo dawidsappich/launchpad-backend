@@ -13,8 +13,8 @@ import javax.validation.constraints.NotNull;
 public class Tile {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
     @NotNull @NotBlank
     private String title;

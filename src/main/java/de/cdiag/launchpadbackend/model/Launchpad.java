@@ -12,8 +12,8 @@ import java.util.Set;
 public class Launchpad {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
     @OneToOne
     private Template template;
