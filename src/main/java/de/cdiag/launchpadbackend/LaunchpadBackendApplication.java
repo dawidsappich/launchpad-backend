@@ -28,9 +28,9 @@ public class LaunchpadBackendApplication {
     CommandLineRunner init() {
         return args -> {
 
-
+            final Launchpad launchpad = new Launchpad();
             final Template template = new Template("generic", "template for business applications");
-            final Launchpad launchpad = new Launchpad(template);
+            launchpad.setTemplate(template);
 
             // applications
             final App invoices = new App("Invoices", "customer invoices");
@@ -43,13 +43,13 @@ public class LaunchpadBackendApplication {
 
             template.setApplications(apps);
 
-            final Tile invoiceTile = new Tile("my invoices", "all invoices in progess", invoices);
+            // OK bis hierhin
 
-
-
+            final Tile invoiceTile = new Tile("my invoices", "all invoices in progress", invoices);
+            // set relationship to launchpad
+            invoiceTile.setLaunchpad(launchpad);
             Set<Tile> tiles = new HashSet<>();
             tiles.add(invoiceTile);
-
             launchpad.setTiles(tiles);
 
 
@@ -65,8 +65,6 @@ public class LaunchpadBackendApplication {
             users.add(qualityAssurance);
             users.add(productOwner);
             users.add(normalUser);
-
-
 
             userService.save(users);
 
