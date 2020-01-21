@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 @NoArgsConstructor
@@ -15,7 +16,8 @@ public class Launchpad {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @OneToOne
+    @NotNull
+    @OneToOne(cascade = CascadeType.ALL)
     private Template template;
 
     @OneToMany(mappedBy = "launchpad")
@@ -23,4 +25,8 @@ public class Launchpad {
 
     @OneToOne(mappedBy = "launchpad")
     private User user;
+
+    public Launchpad(Template template) {
+        this.template = template;
+    }
 }

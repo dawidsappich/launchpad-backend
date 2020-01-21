@@ -33,7 +33,7 @@ public class User {
     @NotNull
     private LocalDateTime modified;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private Launchpad launchpad;
 
     public User(String username, String password) {

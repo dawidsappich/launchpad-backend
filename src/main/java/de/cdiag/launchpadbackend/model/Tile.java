@@ -23,9 +23,15 @@ public class Tile {
 
     private String icon;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private App application;
 
     @ManyToOne
     private Launchpad launchpad;
+
+    public Tile(String title, String description, App application) {
+        this.title = title;
+        this.description = description;
+        this.application = application;
+    }
 }
