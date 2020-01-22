@@ -41,7 +41,7 @@ public class SecurityConfigurationTest {
     }
 
     @Test
-    void givenCredentials_whenLogin_thenResponseMessageSuccess() throws JSONException, MalformedURLException {
+    void givenCredentials_whenLogin_thenResponseMessageStatusSuccess() throws JSONException, MalformedURLException {
         // given
         final JSONObject userJSON = new JSONObject();
         userJSON.put("username", "user");
@@ -61,5 +61,23 @@ public class SecurityConfigurationTest {
 
     }
 
+    @Test
+    void givenBadCredentials_whenLogin_thenResponseMessageStatusError() throws JSONException {
+        // given
+        final JSONObject userJSON = new JSONObject();
+        userJSON.put("username", "unknownUser");
+        userJSON.put("password", "pass");
 
+        final HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        final HttpEntity<String> entity = new HttpEntity<>(userJSON.toString(), headers);
+
+        // when
+        final ResponseMessage message = restTemplate.postForObject(userLoginURL.toString(), entity, ResponseMessage.class);
+
+        //then
+        assertNotNull(message, "response must be present");
+        assertEquals(ResponseMessage.Status.ERROR, message.getStatus(), "status must be 'ERROR'");
+    }
 }
