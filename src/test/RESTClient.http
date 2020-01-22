@@ -1,13 +1,17 @@
 # request login endpoint will trigger authentication
 // @no-cookie-jar
-GET http://localhost:8080/api/v1/user/login
+POST http://localhost:8080/api/v1/user/login
 Content-Type: application/json
-Authorization: Basic user pass
 
+{
+  "username": "user",
+  "password": "pass"
+}
 
 ###
 // @no-cookie-jar
 GET http://localhost:8080/api/v1/launchpad/load
 Accept: application/json
 Authorization: Basic user pass
+
 ###
