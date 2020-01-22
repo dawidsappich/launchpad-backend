@@ -96,4 +96,10 @@ public class UserService implements UserDetailsService {
         }
         return byUsername.get();
     }
+
+    public boolean login(User providedUser) {
+        @NotNull @NotBlank final String username = providedUser.getUsername();
+        final User user = getUser(username);
+        return matches(username, providedUser.getPassword());
+    }
 }

@@ -42,6 +42,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 // allow any request to h2-console
                 .antMatchers("/h2-console/**").permitAll()
+                .antMatchers("/user/login").permitAll()
                 .anyRequest()
                 .authenticated();
     }
