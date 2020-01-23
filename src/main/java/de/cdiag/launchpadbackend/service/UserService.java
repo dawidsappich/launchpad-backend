@@ -111,4 +111,8 @@ public class UserService implements UserDetailsService {
     public void saveTemplates(Set<Template> templates) {
         templateRepository.saveAll(templates);
     }
+
+    public Iterable<Template> loadTemplates() {
+        return templateRepository.findAll();
+    }
 }
