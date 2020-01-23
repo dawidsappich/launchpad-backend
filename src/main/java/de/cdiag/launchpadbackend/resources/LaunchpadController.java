@@ -33,7 +33,7 @@ public class LaunchpadController {
         this.appExecutorService = appExecutorService;
     }
 
-    @GetMapping("load")
+    @GetMapping("tile/all")
     public ResponseEntity<Launchpad> getAllUserTiles() {
         // get the username from the security context
         final String username = getUserName();
