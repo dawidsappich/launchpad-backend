@@ -36,7 +36,7 @@ public class AppExecutorService {
         if (appContexts.indexOf(context) == -1) {
             appContexts.add(context);
         } else {
-            throw new ApplicationContextException("application with id: " + context.getApplicationId() + " is already running");
+            throw new ApplicationContextException("application with id: " + context.getApplicationId() + " is already running for user: " + context.getExecutive());
         }
     }
 
