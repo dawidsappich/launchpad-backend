@@ -1,26 +1,50 @@
 package de.cdiag.launchpadbackend;
 
+import de.cdiag.launchpadbackend.aws.AwsConfig;
 import de.cdiag.launchpadbackend.model.*;
 import de.cdiag.launchpadbackend.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import software.amazon.codeguruprofilerjavaagent.Profiler;
 
+import javax.annotation.PreDestroy;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 @SpringBootApplication
+@Slf4j
 public class LaunchpadBackendApplication {
 
+    private final AwsConfig awsConfig;
+    private final Profiler prof;
     @Autowired
     private UserService userService;
 
+
+    @Autowired
+    public LaunchpadBackendApplication(final AwsConfig _awsConfig) {
+        this.awsConfig = _awsConfig;
+        System.setProperty("aws.region", this.awsConfig.getRegion());
+        prof = this.awsConfig.awsCodeGuruProfiler();
+        prof.start();
+    }
+
     public static void main(String[] args) {
         SpringApplication.run(LaunchpadBackendApplication.class, args);
+    }
+
+    @PreDestroy
+    private void stop() {
+        log.info("Stopping Profiler");
+        if (prof.isRunning()) {
+            prof.stop();
+        }
     }
 
     // seed data to database
@@ -67,7 +91,6 @@ public class LaunchpadBackendApplication {
             users.add(normalUser);
 
             userService.save(users);
-
 
 
         };
