@@ -51,4 +51,7 @@ public class LaunchpadController {
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+    // add templates (applications) for the launchpad
+
 }
