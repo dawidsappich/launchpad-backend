@@ -13,9 +13,19 @@ import org.springframework.web.context.request.WebRequest;
 @ControllerAdvice
 public class RestResponseEntityExceptionHandler {
 
-    @ExceptionHandler({UsernameNotFoundException.class, BadCredentialsException.class, ApplicationContextException.class})
+    @ExceptionHandler({UsernameNotFoundException.class, BadCredentialsException.class})
     protected ResponseEntity<ResponseMessage> handleConflict(RuntimeException ex, WebRequest request) {
-        final var message = new ResponseMessage(ResponseMessage.Status.ERROR, ex.getMessage());
+        final var message = getMessage(ex);
         return new ResponseEntity<>(message, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler({ApplicationContextException.class})
+    protected ResponseEntity<ResponseMessage> handleAppContextConflict(RuntimeException ex, WebRequest request) {
+        final var message = getMessage(ex);
+        return new ResponseEntity<>(message, HttpStatus.CONFLICT);
+    }
+
+    private ResponseMessage getMessage(RuntimeException ex) {
+        return new ResponseMessage(ResponseMessage.Status.ERROR, ex.getMessage());
     }
 }
