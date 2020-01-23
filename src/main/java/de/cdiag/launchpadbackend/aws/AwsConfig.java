@@ -3,6 +3,7 @@ package de.cdiag.launchpadbackend.aws;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
@@ -11,6 +12,7 @@ import software.amazon.codeguruprofilerjavaagent.Profiler;
 
 
 @Configuration
+@PropertySource(value = "classpath:aws.gitignore.properties")
 @Data
 public class AwsConfig {
 
