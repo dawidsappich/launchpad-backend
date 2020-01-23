@@ -1,6 +1,7 @@
 package de.cdiag.launchpadbackend.resources;
 
 import de.cdiag.launchpadbackend.dto.UserDto;
+import de.cdiag.launchpadbackend.message.Message;
 import de.cdiag.launchpadbackend.message.ResponseMessage;
 import de.cdiag.launchpadbackend.model.User;
 import de.cdiag.launchpadbackend.service.UserService;
@@ -28,9 +29,9 @@ public class UserController {
         if (userService.login(user)) {
 
             // http basic auth is handled in auth provider
-            return new ResponseEntity<>(new ResponseMessage(ResponseMessage.Status.OK, "Success"), HttpStatus.OK);
+            return new ResponseEntity<>(new ResponseMessage(Message.Status.OK, "Success"), HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(new ResponseMessage(ResponseMessage.Status.ERROR, "username or password invalid"), HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(new ResponseMessage(Message.Status.ERROR, "username or password invalid"), HttpStatus.UNAUTHORIZED);
         }
 
     }

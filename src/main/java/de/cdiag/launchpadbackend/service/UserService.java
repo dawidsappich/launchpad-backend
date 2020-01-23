@@ -91,7 +91,7 @@ public class UserService implements UserDetailsService {
     private User getUser(String username) {
         final Optional<User> byUsername = userRepository.findByUsername(username);
         if (byUsername.isEmpty()) {
-            // TODO handle exceptions
+            // error is handled in RestResponseEntityExceptionHandler
             throw new UsernameNotFoundException("user with username '" + username + "' not found");
         }
         return byUsername.get();

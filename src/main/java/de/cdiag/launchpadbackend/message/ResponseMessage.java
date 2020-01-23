@@ -1,13 +1,21 @@
 package de.cdiag.launchpadbackend.message;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
 @Data
-public class ResponseMessage {
-    private final Status status;
-    private final String message;
+public class ResponseMessage extends Message {
 
-    public enum Status {
-        OK, WARN, ERROR
+    private String payload;
+
+    public ResponseMessage(Status status, String message) {
+        this.status = status;
+        this.message = message;
+    }
+
+    public ResponseMessage(Status status, String message, String payload) {
+        this(status, message);
+        this.payload = payload;
     }
 }
