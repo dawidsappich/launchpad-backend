@@ -16,6 +16,25 @@ Authorization: Basic user pass
 
 ###
 
+POST http://localhost:8080/api/v1/launchpad/tile/add
+Content-Type: application/json
+Authorization: Basic user pass
+
+{
+  "id": 3,
+  "templateName": "operating",
+  "templateDescription": "template for operating",
+  "applications": [
+    {
+      "id": 3,
+      "appName": "Operating",
+      "appDescription": "Contact the service help"
+    }
+  ]
+}
+
+###
+
 // @no-cookie-jar
 GET http://localhost:8080/api/v1/launchpad/application/2
 Accept: application/json

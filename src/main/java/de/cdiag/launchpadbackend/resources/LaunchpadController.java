@@ -7,18 +7,14 @@ import de.cdiag.launchpadbackend.message.ResponseMessage;
 import de.cdiag.launchpadbackend.model.AppContext;
 import de.cdiag.launchpadbackend.model.Launchpad;
 import de.cdiag.launchpadbackend.model.Template;
+import de.cdiag.launchpadbackend.model.Tile;
 import de.cdiag.launchpadbackend.service.AppExecutorService;
 import de.cdiag.launchpadbackend.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("launchpad")
@@ -33,6 +29,8 @@ public class LaunchpadController {
         this.appExecutorService = appExecutorService;
     }
 
+    //  ##### TILE #####
+
     @GetMapping("tile/all")
     public ResponseEntity<Launchpad> getAllUserTiles() {
         // get the username from the security context
@@ -42,6 +40,26 @@ public class LaunchpadController {
 
         return new ResponseEntity<>(launchpad, HttpStatus.OK);
     }
+
+    @PostMapping("tile/add")
+    public ResponseEntity<ResponseMessage> addTile(@RequestBody Template template) {
+
+        final String userName = getUserName();
+        final Tile tile = userService.addTileToUserLaunchpad(template, userName);
+        String payload;
+        try {
+            payload = asJson(tile);
+        } catch (JsonProcessingException e) {
+            return handleException(e);
+        }
+
+        final ResponseMessage response = new ResponseMessage(Message.Status.OK, "Success", payload);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+
+
+    //  ##### APPLICATION #####
 
     @GetMapping("application/{id}")
     public ResponseEntity<ResponseMessage> startApplication(@PathVariable Long id) {
@@ -57,6 +75,7 @@ public class LaunchpadController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    //  ##### TEMPLATE #####
 
     @GetMapping("template/all")
     public ResponseEntity<ResponseMessage> getAllTemplates() {
@@ -66,21 +85,29 @@ public class LaunchpadController {
 
         try {
 
-            final ObjectMapper mapper = new ObjectMapper();
-            payload = mapper.writeValueAsString(templates);
+            payload = asJson(templates);
 
         } catch (JsonProcessingException ex) {
-            log.error(ex.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            return handleException(ex);
         }
-        final ResponseMessage response = new ResponseMessage(Message.Status.OK, "Success", payload);
 
+        final ResponseMessage response = new ResponseMessage(Message.Status.OK, "Success", payload);
         return new ResponseEntity<>(response, HttpStatus.OK);
 
+    }
+
+    private ResponseEntity<ResponseMessage> handleException(Exception ex) {
+        log.error(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 
     // add templates (applications) for the launchpad
     private String getUserName() {
         return SecurityContextHolder.getContext().getAuthentication().getName();
+    }
+
+    private String asJson(Object obj) throws JsonProcessingException {
+        final ObjectMapper mapper = new ObjectMapper();
+        return mapper.writeValueAsString(obj);
     }
 }

@@ -1,4 +1,4 @@
-package de.cdiag.launchpadbackend.aws;
+package de.cdiag.launchpadbackend.configuration;
 
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;

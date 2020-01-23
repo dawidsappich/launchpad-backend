@@ -1,8 +1,6 @@
 package de.cdiag.launchpadbackend.service;
 
-import de.cdiag.launchpadbackend.model.Launchpad;
-import de.cdiag.launchpadbackend.model.Template;
-import de.cdiag.launchpadbackend.model.User;
+import de.cdiag.launchpadbackend.model.*;
 import de.cdiag.launchpadbackend.repository.LaunchpadRepository;
 import de.cdiag.launchpadbackend.repository.TemplateRepository;
 import de.cdiag.launchpadbackend.repository.UserRepository;
@@ -114,5 +112,36 @@ public class UserService implements UserDetailsService {
 
     public Iterable<Template> loadTemplates() {
         return templateRepository.findAll();
+    }
+
+    public Tile addTileToUserLaunchpad(Template template, String userName) {
+
+        final Launchpad launchpad = loadLaunchpad(userName);
+        final Set<App> applications = template.getApplications();
+        final App app = applications.stream()
+                .findFirst()
+                // TODO handle exception gracefully
+                .orElseThrow(RuntimeException::new);
+
+        final Tile tile = createTile(template, launchpad, app);
+
+        // add tile to launchpad
+        final Set<Tile> tiles = launchpad.getTiles();
+        tiles.add(tile);
+
+        // save launchpad (or user?)
+        launchpadRepository.save(launchpad);
+
+        return tile;
+    }
+
+    private Tile createTile(Template template, Launchpad launchpad, App app) {
+        // create tile
+        // create relationship between tile and application
+        final Tile tile = new Tile(template.getTemplateName(), template.getTemplateDescription(), app);
+        // create relationship to launchpad
+        tile.setLaunchpad(launchpad);
+        tile.setIcon("icon-operating");
+        return tile;
     }
 }

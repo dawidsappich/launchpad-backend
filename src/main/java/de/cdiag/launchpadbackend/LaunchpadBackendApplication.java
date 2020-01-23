@@ -1,6 +1,6 @@
 package de.cdiag.launchpadbackend;
 
-import de.cdiag.launchpadbackend.aws.AwsConfig;
+import de.cdiag.launchpadbackend.configuration.AwsConfig;
 import de.cdiag.launchpadbackend.model.*;
 import de.cdiag.launchpadbackend.service.UserService;
 import lombok.extern.slf4j.Slf4j;
