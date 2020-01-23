@@ -53,11 +53,25 @@ public class LaunchpadBackendApplication {
 
             final Launchpad launchpad = new Launchpad();
             launchpad.setTitle("MyHome");
-            final Template template = new Template("generic", "template for business applications");
-            launchpad.setTemplate(template);
+            final Template invoiceTemplate = new Template("invoice", "template for accounting");
+            final Template scheduleTemplate = new Template("schedule", "template for schedules");
+            final Template warehouseTemplate = new Template("warehouse", "template for warehouse");
+            final Template operatingTemplate = new Template("operating", "template for operating");
+
+            // collect templates into collection to be persisted
+            // these templates are not related to a launchpad
+            // they will be used for assigning to a new launchpad
+            Set<Template> templates = new HashSet<>();
+            templates.add(scheduleTemplate);
+            templates.add(warehouseTemplate);
+            templates.add(operatingTemplate);
+
+
+            // create a relationship (the hole chain) for the invoice template to a user
+            launchpad.setTemplate(invoiceTemplate);
 
             // applications
-            final App invoices = new App("Invoices", "customer invoices");
+            final App invoices = new App("Invoices", "Customer invoices");
             final App schedules = new App("Schedules", "Show the upcoming schedules");
             final App warehouse = new App("Warehouse", "Manage items in the warehouse");
             final App operating = new App("Operating", "Contact the service help");
@@ -65,7 +79,24 @@ public class LaunchpadBackendApplication {
             Set<App> apps = new HashSet<>();
             apps.add(invoices);
 
-            template.setApplications(apps);
+            invoiceTemplate.setApplications(apps);
+
+            Set<App> remainingApps = new HashSet<>();
+            // add app to the collection
+            remainingApps.add(schedules);
+
+            // create relationship for the app collection to a template
+            scheduleTemplate.setApplications(remainingApps);
+
+            remainingApps = new HashSet<>();
+            remainingApps.add(warehouse);
+
+            warehouseTemplate.setApplications(remainingApps);
+
+            remainingApps = new HashSet<>();
+            remainingApps.add(operating);
+
+            operatingTemplate.setApplications(remainingApps);
 
             final Tile invoiceTile = new Tile("my invoices", "all invoices in progress", invoices);
             invoiceTile.setIcon("invoice-icon");
@@ -90,7 +121,7 @@ public class LaunchpadBackendApplication {
             users.add(normalUser);
 
             userService.save(users);
-
+            userService.saveTemplates(templates);
 
         };
     }

@@ -1,8 +1,10 @@
 package de.cdiag.launchpadbackend.service;
 
 import de.cdiag.launchpadbackend.model.Launchpad;
+import de.cdiag.launchpadbackend.model.Template;
 import de.cdiag.launchpadbackend.model.User;
 import de.cdiag.launchpadbackend.repository.LaunchpadRepository;
+import de.cdiag.launchpadbackend.repository.TemplateRepository;
 import de.cdiag.launchpadbackend.repository.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -17,16 +19,19 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final LaunchpadRepository launchpadRepository;
+    private final TemplateRepository templateRepository;
 
-    public UserService(final UserRepository userRepository, LaunchpadRepository launchpadRepository) {
+    public UserService(UserRepository userRepository, LaunchpadRepository launchpadRepository, TemplateRepository templateRepository) {
         this.userRepository = userRepository;
         this.launchpadRepository = launchpadRepository;
+        this.templateRepository = templateRepository;
     }
 
     @Bean
@@ -101,5 +106,9 @@ public class UserService implements UserDetailsService {
         @NotNull @NotBlank final String username = providedUser.getUsername();
         final User user = getUser(username);
         return matches(username, providedUser.getPassword());
+    }
+
+    public void saveTemplates(Set<Template> templates) {
+        templateRepository.saveAll(templates);
     }
 }
