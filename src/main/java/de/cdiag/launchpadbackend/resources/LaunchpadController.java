@@ -7,6 +7,8 @@ import de.cdiag.launchpadbackend.message.ResponseMessage;
 import de.cdiag.launchpadbackend.model.*;
 import de.cdiag.launchpadbackend.service.AppExecutorService;
 import de.cdiag.launchpadbackend.service.UserService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("launchpad")
 @Slf4j
+@Api(description = "operations regarding templates, tiles, apps and the launchpad")
 public class LaunchpadController {
 
     private final UserService userService;
@@ -28,6 +31,7 @@ public class LaunchpadController {
 
     //  ##### TILE #####
 
+    @ApiOperation("load all tiles for the user")
     @GetMapping("tile/all")
     public ResponseEntity<Launchpad> getAllUserTiles() {
         // get the username from the security context
@@ -38,6 +42,7 @@ public class LaunchpadController {
         return new ResponseEntity<>(launchpad, HttpStatus.OK);
     }
 
+    @ApiOperation("add the tile from the template to the launchpad of the user")
     @PostMapping("tile/add")
     public ResponseEntity<ResponseMessage> addTile(@RequestBody Template template) {
 
@@ -58,6 +63,7 @@ public class LaunchpadController {
 
     //  ##### APPLICATION #####
 
+    @ApiOperation("start the application for the provided application id")
     @GetMapping("application/{id}")
     public ResponseEntity<ResponseMessage> startApplication(@PathVariable Long id) {
 
@@ -72,7 +78,7 @@ public class LaunchpadController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-
+    @ApiOperation("update the applications metadata")
     @PatchMapping("application")
     public ResponseEntity<ResponseMessage> updateApplication(@RequestBody App application) {
 
@@ -93,7 +99,7 @@ public class LaunchpadController {
     }
 
     //  ##### TEMPLATE #####
-
+    @ApiOperation("load all templates for the user")
     @GetMapping("template/all")
     public ResponseEntity<ResponseMessage> getAllTemplates() {
 
