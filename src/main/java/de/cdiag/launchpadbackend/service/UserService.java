@@ -1,6 +1,8 @@
 package de.cdiag.launchpadbackend.service;
 
+import de.cdiag.launchpadbackend.exception.NotFoundException;
 import de.cdiag.launchpadbackend.model.*;
+import de.cdiag.launchpadbackend.repository.AppRepository;
 import de.cdiag.launchpadbackend.repository.LaunchpadRepository;
 import de.cdiag.launchpadbackend.repository.TemplateRepository;
 import de.cdiag.launchpadbackend.repository.UserRepository;
@@ -25,11 +27,13 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final LaunchpadRepository launchpadRepository;
     private final TemplateRepository templateRepository;
+    private final AppRepository appRepository;
 
-    public UserService(UserRepository userRepository, LaunchpadRepository launchpadRepository, TemplateRepository templateRepository) {
+    public UserService(UserRepository userRepository, LaunchpadRepository launchpadRepository, TemplateRepository templateRepository, AppRepository appRepository) {
         this.userRepository = userRepository;
         this.launchpadRepository = launchpadRepository;
         this.templateRepository = templateRepository;
+        this.appRepository = appRepository;
     }
 
     @Bean
@@ -123,7 +127,11 @@ public class UserService implements UserDetailsService {
                 // TODO handle exception gracefully
                 .orElseThrow(RuntimeException::new);
 
-        final Tile tile = createTile(template, launchpad, app);
+        // find the app
+        final Optional<App> appById = appRepository.findById(app.getId());
+        final App foundApp = appById.orElseThrow(NotFoundException::new);
+
+        final Tile tile = createTile(template, launchpad, foundApp);
 
         // add tile to launchpad
         final Set<Tile> tiles = launchpad.getTiles();
@@ -143,5 +151,24 @@ public class UserService implements UserDetailsService {
         tile.setLaunchpad(launchpad);
         tile.setIcon("icon-operating");
         return tile;
+    }
+
+    public App updateApplication(String username, App providedApp) {
+        // find the application
+        final Optional<App> appById = appRepository.findById(providedApp.getId());
+        if (appById.isEmpty()) {
+            throw new NotFoundException("application with id: " + providedApp.getId() + " not found");
+        }
+
+        // update the application
+        final App app = appById.get();
+        app.setAppName(providedApp.getAppName());
+        app.setAppDescription(providedApp.getAppDescription());
+
+        //persist the application
+        final App savedApp = appRepository.save(app);
+
+        //return the updated
+        return savedApp;
     }
 }

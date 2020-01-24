@@ -4,10 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.cdiag.launchpadbackend.message.Message;
 import de.cdiag.launchpadbackend.message.ResponseMessage;
-import de.cdiag.launchpadbackend.model.AppContext;
-import de.cdiag.launchpadbackend.model.Launchpad;
-import de.cdiag.launchpadbackend.model.Template;
-import de.cdiag.launchpadbackend.model.Tile;
+import de.cdiag.launchpadbackend.model.*;
 import de.cdiag.launchpadbackend.service.AppExecutorService;
 import de.cdiag.launchpadbackend.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -75,6 +72,26 @@ public class LaunchpadController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+
+    @PatchMapping("application")
+    public ResponseEntity<ResponseMessage> updateApplication(@RequestBody App application) {
+
+        // get the username from the security context
+        final String username = getUserName();
+
+        final App updatedApp = userService.updateApplication(username, application);
+
+        String payload = null;
+        try {
+            payload = asJson(updatedApp);
+        } catch (JsonProcessingException e) {
+            handleException(e);
+        }
+
+        final ResponseMessage response = new ResponseMessage(Message.Status.OK, "application updated", payload);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
     //  ##### TEMPLATE #####
 
     @GetMapping("template/all")
@@ -101,7 +118,6 @@ public class LaunchpadController {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 
-    // add templates (applications) for the launchpad
     private String getUserName() {
         return SecurityContextHolder.getContext().getAuthentication().getName();
     }
