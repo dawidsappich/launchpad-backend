@@ -1,8 +1,10 @@
 package de.cdiag.launchpadbackend.service;
 
-import de.cdiag.launchpadbackend.model.Launchpad;
-import de.cdiag.launchpadbackend.model.User;
+import de.cdiag.launchpadbackend.exception.NotFoundException;
+import de.cdiag.launchpadbackend.model.*;
+import de.cdiag.launchpadbackend.repository.AppRepository;
 import de.cdiag.launchpadbackend.repository.LaunchpadRepository;
+import de.cdiag.launchpadbackend.repository.TemplateRepository;
 import de.cdiag.launchpadbackend.repository.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -17,16 +19,21 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final LaunchpadRepository launchpadRepository;
+    private final TemplateRepository templateRepository;
+    private final AppRepository appRepository;
 
-    public UserService(final UserRepository userRepository, LaunchpadRepository launchpadRepository) {
+    public UserService(UserRepository userRepository, LaunchpadRepository launchpadRepository, TemplateRepository templateRepository, AppRepository appRepository) {
         this.userRepository = userRepository;
         this.launchpadRepository = launchpadRepository;
+        this.templateRepository = templateRepository;
+        this.appRepository = appRepository;
     }
 
     @Bean
@@ -101,5 +108,67 @@ public class UserService implements UserDetailsService {
         @NotNull @NotBlank final String username = providedUser.getUsername();
         final User user = getUser(username);
         return matches(username, providedUser.getPassword());
+    }
+
+    public void saveTemplates(Set<Template> templates) {
+        templateRepository.saveAll(templates);
+    }
+
+    public Iterable<Template> loadTemplates() {
+        return templateRepository.findAll();
+    }
+
+    public Tile addTileToUserLaunchpad(Template template, String userName) {
+
+        final Launchpad launchpad = loadLaunchpad(userName);
+        final Set<App> applications = template.getApplications();
+        final App app = applications.stream()
+                .findFirst()
+                // TODO handle exception gracefully
+                .orElseThrow(RuntimeException::new);
+
+        // find the app
+        final Optional<App> appById = appRepository.findById(app.getId());
+        final App foundApp = appById.orElseThrow(NotFoundException::new);
+
+        final Tile tile = createTile(template, launchpad, foundApp);
+
+        // add tile to launchpad
+        final Set<Tile> tiles = launchpad.getTiles();
+        tiles.add(tile);
+
+        // save launchpad (or user?)
+        launchpadRepository.save(launchpad);
+
+        return tile;
+    }
+
+    private Tile createTile(Template template, Launchpad launchpad, App app) {
+        // create tile
+        // create relationship between tile and application
+        final Tile tile = new Tile(template.getTemplateName(), template.getTemplateDescription(), app);
+        // create relationship to launchpad
+        tile.setLaunchpad(launchpad);
+        tile.setIcon("icon-operating");
+        return tile;
+    }
+
+    public App updateApplication(String username, App providedApp) {
+        // find the application
+        final Optional<App> appById = appRepository.findById(providedApp.getId());
+        if (appById.isEmpty()) {
+            throw new NotFoundException("application with id: " + providedApp.getId() + " not found");
+        }
+
+        // update the application
+        final App app = appById.get();
+        app.setAppName(providedApp.getAppName());
+        app.setAppDescription(providedApp.getAppDescription());
+
+        //persist the application
+        final App savedApp = appRepository.save(app);
+
+        //return the updated
+        return savedApp;
     }
 }

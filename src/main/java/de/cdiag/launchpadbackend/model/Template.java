@@ -15,7 +15,7 @@ import java.util.Set;
 @Getter
 @Setter
 @EqualsAndHashCode(exclude = {"applications"})
-@JsonIgnoreProperties({"applications", "launchpad"})
+@JsonIgnoreProperties({"launchpad"})
 @Entity
 public class Template {
 

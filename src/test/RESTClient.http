@@ -10,21 +10,55 @@ Content-Type: application/json
 
 ###
 // @no-cookie-jar
-GET http://localhost:8080/api/v1/launchpad/load
+GET http://localhost:8080/api/v1/launchpad/tile/all
 Accept: application/json
 Authorization: Basic user pass
 
 ###
 
+POST http://localhost:8080/api/v1/launchpad/tile/add
+Content-Type: application/json
+Authorization: Basic user pass
+
+{
+  "id": 3,
+  "templateName": "operating",
+  "templateDescription": "template for operating",
+  "applications": [
+    {
+      "id": 3,
+      "appName": "Operating",
+      "appDescription": "Contact the service help"
+    }
+  ]
+}
+
+###
+
+# start an app
 // @no-cookie-jar
-GET http://localhost:8080/api/v1/launchpad/application/2
+GET http://localhost:8080/api/v1/launchpad/application/1
 Accept: application/json
 Authorization: Basic user pass
 
 ###
 
+# update app name and description
+PATCH http://localhost:8080/api/v1/launchpad/application
+Accept: application/json
+Authorization: Basic user pass
+Content-Type: application/json
+
+{
+  "id": 3,
+  "appName": "Operating & Service Desk",
+  "appDescription": "Contact the service help"
+}
+
+###
+
 // @no-cookie-jar
-GET http://localhost:8080/api/v1/launchpad/application/6
+GET http://localhost:8080/api/v1/launchpad/template/all
 Accept: application/json
 Authorization: Basic user pass
 
