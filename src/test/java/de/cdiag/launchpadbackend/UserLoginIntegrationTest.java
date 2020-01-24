@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
@@ -27,14 +28,17 @@ public class UserLoginIntegrationTest {
 
     public static final String USER_LOGIN_URL = "/api/v1/user/login";
     public static final String HOST = "http://localhost:";
-    TestRestTemplate restTemplate;
-    URL userLoginURL;
+
+    @Autowired
+    private TestRestTemplate restTemplate;
+
     @LocalServerPort int port;
+
+    URL userLoginURL;
     ObjectMapper mapper;
 
     @BeforeEach
     private void setup() throws MalformedURLException {
-        restTemplate = new TestRestTemplate();
         userLoginURL = new URL(HOST + port + USER_LOGIN_URL);
         mapper = new ObjectMapper();
     }
