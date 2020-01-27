@@ -1,6 +1,7 @@
 package de.cdiag.launchpadbackend.service;
 
 import de.cdiag.launchpadbackend.exception.NotFoundException;
+import de.cdiag.launchpadbackend.exception.UserAlreadyExistsException;
 import de.cdiag.launchpadbackend.model.*;
 import de.cdiag.launchpadbackend.repository.AppRepository;
 import de.cdiag.launchpadbackend.repository.LaunchpadRepository;
@@ -47,7 +48,7 @@ public class UserService implements UserDetailsService {
         return userRepository.save(user);
     }
 
-    private String encodePassword(final String password) {
+    protected String encodePassword(final String password) {
         return passwordEncoder().encode(password);
     }
 
@@ -170,5 +171,14 @@ public class UserService implements UserDetailsService {
 
         //return the updated
         return savedApp;
+    }
+
+    public User register(User user) {
+        // check if user already exists
+        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
+            throw new UserAlreadyExistsException("username '" + user.getUsername() + "' already exists.");
+        }
+        user.setPassword(encodePassword(user.getPassword()));
+        return userRepository.save(user);
     }
 }

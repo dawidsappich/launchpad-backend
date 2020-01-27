@@ -39,4 +39,14 @@ public class UserController {
         }
 
     }
+
+    @ApiOperation("singn up a new user")
+    @PostMapping("signup")
+    public ResponseEntity<ResponseMessage> signUp(@RequestBody UserDto userDto) {
+        final User user = new User(userDto.getUsername(), userDto.getPassword());
+
+        userService.register(user);
+
+        return new ResponseEntity<>(new ResponseMessage(Message.Status.OK, "Success"), HttpStatus.OK);
+    }
 }

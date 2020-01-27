@@ -9,6 +9,20 @@ Content-Type: application/json
 }
 
 ###
+
+# signup a new user
+// @no-cookie-jar
+POST http://localhost:8080/api/v1/user/signup
+Content-Type: application/json
+
+{
+  "username": "customer",
+  "password": "pass"
+}
+
+###
+
+
 // @no-cookie-jar
 GET http://localhost:8080/api/v1/launchpad/tile/all
 Accept: application/json
