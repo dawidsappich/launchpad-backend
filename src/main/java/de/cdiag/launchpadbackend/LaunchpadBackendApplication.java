@@ -21,30 +21,30 @@ import java.util.Set;
 @Slf4j
 public class LaunchpadBackendApplication {
 
-    private final AwsConfig awsConfig;
-    private final Profiler prof;
+    /*private final AwsConfig awsConfig;
+    private final Profiler prof;*/
     @Autowired
     private UserService userService;
 
 
-    @Autowired
+    /*@Autowired
     public LaunchpadBackendApplication(final AwsConfig _awsConfig) {
         this.awsConfig = _awsConfig;
         prof = this.awsConfig.awsCodeGuruProfiler();
         prof.start();
-    }
+    }*/
 
     public static void main(String[] args) {
         SpringApplication.run(LaunchpadBackendApplication.class, args);
     }
 
-    @PreDestroy
+    /*@PreDestroy
     private void stop() {
         log.info("Stopping Profiler");
         if (prof.isRunning()) {
             prof.stop();
         }
-    }
+    }*/
 
     // seed data to database
     @Bean
