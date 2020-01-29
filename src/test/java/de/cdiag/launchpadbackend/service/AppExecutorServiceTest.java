@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-@TestPropertySource(locations = "classpath:/resources/application.properties")
+@TestPropertySource(locations = "classpath:application.properties")
 class AppExecutorServiceTest {
 
     @MockBean

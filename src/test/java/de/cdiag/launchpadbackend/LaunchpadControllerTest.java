@@ -1,21 +1,24 @@
 package de.cdiag.launchpadbackend;
 
-import de.cdiag.launchpadbackend.configuration.CustomAuthProvider;
 import de.cdiag.launchpadbackend.model.Launchpad;
 import de.cdiag.launchpadbackend.resources.LaunchpadController;
+import de.cdiag.launchpadbackend.service.AppExecutorService;
 import de.cdiag.launchpadbackend.service.UserService;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.annotation.IfProfileValue;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import static org.mockito.Mockito.when;
@@ -24,18 +27,28 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+// instantiates only the web layer in the app context
 @WebMvcTest(LaunchpadController.class)
 @RunWith(SpringJUnit4ClassRunner.class)
-// provide custom auth provider used for spring security
-@ContextConfiguration(classes = CustomAuthProvider.class)
-@WithMockUser
 public class LaunchpadControllerTest {
+
+    @Autowired
+    private WebApplicationContext context;
 
     @MockBean
     private UserService userService;
 
-    @Autowired
+    @MockBean
+    private AppExecutorService appExecutorService;
+
     private MockMvc mockMvc;
+
+    @Before
+    public void setup() {
+        mockMvc = MockMvcBuilders
+                .webAppContextSetup(context)
+                .build();
+    }
 
     // ############ TESTING OF WEB LAYER ONLY #############
 
