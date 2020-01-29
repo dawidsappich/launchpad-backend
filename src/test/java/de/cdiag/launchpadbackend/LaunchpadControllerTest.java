@@ -1,5 +1,6 @@
 package de.cdiag.launchpadbackend;
 
+import de.cdiag.launchpadbackend.configuration.CustomAuthProvider;
 import de.cdiag.launchpadbackend.model.Launchpad;
 import de.cdiag.launchpadbackend.resources.LaunchpadController;
 import de.cdiag.launchpadbackend.service.UserService;
@@ -25,13 +26,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(LaunchpadController.class)
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration
-@WebAppConfiguration
+// provide custom auth provider used for spring security
+@ContextConfiguration(classes = CustomAuthProvider.class)
 @WithMockUser
 public class LaunchpadControllerTest {
-
-    @Autowired
-    private WebApplicationContext context;
 
     @MockBean
     private UserService userService;
@@ -43,7 +41,7 @@ public class LaunchpadControllerTest {
 
     @Test
     public void whenLoadAllTilesForUser_thenReturnWithStatusOk() throws Exception {
-        /*when(userService.loadLaunchpad("user"))
+        when(userService.loadLaunchpad("user"))
                 .thenReturn(new Launchpad());
 
         final MvcResult mvcResult = mockMvc.perform(get("/api/v1/launchpad/tile/all"))
@@ -53,7 +51,7 @@ public class LaunchpadControllerTest {
                 .andReturn();
 
         Assert.assertEquals("application/json;charset=UTF-8",
-                mvcResult.getResponse().getContentType());*/
+                mvcResult.getResponse().getContentType());
     }
 
     @Test
