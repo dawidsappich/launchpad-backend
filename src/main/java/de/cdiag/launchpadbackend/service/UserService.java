@@ -100,7 +100,7 @@ public class UserService implements UserDetailsService {
         final Optional<User> byUsername = userRepository.findByUsername(username);
         if (byUsername.isEmpty()) {
             // error is handled in RestResponseEntityExceptionHandler
-            throw new UsernameNotFoundException("user with username '" + username + "' not found");
+            throw new UsernameNotFoundException("user not found");
         }
         return byUsername.get();
     }
@@ -160,7 +160,7 @@ public class UserService implements UserDetailsService {
         // find the application
         final Optional<App> appById = appRepository.findById(providedApp.getId());
         if (appById.isEmpty()) {
-            throw new NotFoundException("application with id: " + providedApp.getId() + " not found");
+            throw new NotFoundException("application not found");
         }
 
         // update the application
@@ -178,7 +178,7 @@ public class UserService implements UserDetailsService {
     public User register(User user) {
         // check if user already exists
         if (userRepository.findByUsername(user.getUsername()).isPresent()) {
-            throw new UserAlreadyExistsException("username '" + user.getUsername() + "' already exists.");
+            throw new UserAlreadyExistsException("username already exists.");
         }
         user.setPassword(encodePassword(user.getPassword()));
         return userRepository.save(user);
