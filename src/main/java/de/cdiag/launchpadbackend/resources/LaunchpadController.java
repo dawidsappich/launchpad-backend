@@ -85,7 +85,7 @@ public class LaunchpadController {
         // get the username from the security context
         final String username = getUserName();
 
-        final App updatedApp = userService.updateApplication(username, application);
+        final App updatedApp = userService.updateApplication(application);
 
         String payload = null;
         try {
@@ -128,6 +128,7 @@ public class LaunchpadController {
         return SecurityContextHolder.getContext().getAuthentication().getName();
     }
 
+    // inject or inintialize one time as static
     private String asJson(Object obj) throws JsonProcessingException {
         final ObjectMapper mapper = new ObjectMapper();
         return mapper.writeValueAsString(obj);

@@ -7,21 +7,18 @@ import de.cdiag.launchpadbackend.service.UserService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Profile;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.annotation.IfProfileValue;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -29,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 // instantiates only the web layer in the app context
 @WebMvcTest(LaunchpadController.class)
-@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 public class LaunchpadControllerTest {
 
     @Autowired
@@ -47,6 +44,7 @@ public class LaunchpadControllerTest {
     public void setup() {
         mockMvc = MockMvcBuilders
                 .webAppContextSetup(context)
+                .apply(springSecurity())
                 .build();
     }
 
@@ -60,6 +58,7 @@ public class LaunchpadControllerTest {
         final MvcResult mvcResult = mockMvc.perform(get("/api/v1/launchpad/tile/all"))
                 .andDo(print())
                 .andExpect(status().isOk())
+                // check complete response object
                 .andExpect(jsonPath("$.status").value("OK"))
                 .andReturn();
 

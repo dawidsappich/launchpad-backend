@@ -52,7 +52,7 @@ class UserServiceTest {
         // given
         final UserDto userDto = new UserDto("newuser", "password");
 
-        // given
+        // when
         final ResponseMessage message = restTemplate.postForObject("http://localhost:" + port + "/api/v1/user/signup", userDto, ResponseMessage.class);
 
         // then
@@ -65,7 +65,7 @@ class UserServiceTest {
         // given
         final UserDto userDto = new UserDto("newuser", "password");
 
-        // given
+        // when
         final ResponseMessage message = restTemplate.postForObject("http://localhost:" + port + "/api/v1/user/signup", userDto, ResponseMessage.class);
 
         // then

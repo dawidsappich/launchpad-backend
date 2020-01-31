@@ -119,6 +119,7 @@ public class UserService implements UserDetailsService {
         return templateRepository.findAll();
     }
 
+    // add transaction handling
     public Tile addTileToUserLaunchpad(Template template, String userName) {
 
         final Launchpad launchpad = loadLaunchpad(userName);
@@ -139,7 +140,8 @@ public class UserService implements UserDetailsService {
         tiles.add(tile);
 
         // save launchpad (or user?)
-        launchpadRepository.save(launchpad);
+        final Launchpad launchpad_updated = launchpadRepository.save(launchpad);
+        // return the tile form the launchpad
 
         return tile;
     }
@@ -154,7 +156,7 @@ public class UserService implements UserDetailsService {
         return tile;
     }
 
-    public App updateApplication(String username, App providedApp) {
+    public App updateApplication(App providedApp) {
         // find the application
         final Optional<App> appById = appRepository.findById(providedApp.getId());
         if (appById.isEmpty()) {
