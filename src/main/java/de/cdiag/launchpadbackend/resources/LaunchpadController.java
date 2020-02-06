@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("launchpad")
+@CrossOrigin
 @Slf4j
 @Api(description = "operations regarding templates, tiles, apps and the launchpad")
 public class LaunchpadController {
@@ -101,21 +102,11 @@ public class LaunchpadController {
     //  ##### TEMPLATE #####
     @ApiOperation("load all templates for the user")
     @GetMapping("template/all")
-    public ResponseEntity<ResponseMessage> getAllTemplates() {
+    public ResponseEntity<Iterable<Template>> getAllTemplates() {
 
         final Iterable<Template> templates = userService.loadTemplates();
-        String payload;
 
-        try {
-
-            payload = asJson(templates);
-
-        } catch (JsonProcessingException ex) {
-            return handleException(ex);
-        }
-
-        final ResponseMessage response = new ResponseMessage(Message.Status.OK, "Success", payload);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(templates, HttpStatus.OK);
 
     }
 
@@ -132,5 +123,17 @@ public class LaunchpadController {
     private String asJson(Object obj) throws JsonProcessingException {
         final ObjectMapper mapper = new ObjectMapper();
         return mapper.writeValueAsString(obj);
+    }
+
+    // ###### USERROLE ######
+
+    @ApiOperation("get a flag if the user is an admin")
+    @GetMapping("userrole")
+    public ResponseEntity<Boolean> isUserRoleAdmin() {
+
+        final String userName = getUserName();
+        boolean isAdmin = userName.equals("user");
+
+        return new ResponseEntity<>(isAdmin, HttpStatus.OK);
     }
 }

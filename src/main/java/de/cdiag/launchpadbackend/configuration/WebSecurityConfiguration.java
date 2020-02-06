@@ -38,6 +38,9 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         // disable in favor of h2
         http.csrf().disable();
 
+        // enable CORS
+        http.cors();
+
         // all request must be authenticated
         http.authorizeRequests()
                 // allow any request to h2-console
