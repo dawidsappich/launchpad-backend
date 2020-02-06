@@ -6,6 +6,7 @@ import de.cdiag.launchpadbackend.repository.AppRepository;
 import org.springframework.context.ApplicationContextException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +37,7 @@ public class AppExecutorService {
         if (appContexts.indexOf(context) == -1) {
             appContexts.add(context);
         } else {
-            throw new ApplicationContextException("application with id: " + context.getApplicationId() + " is already running for user: " + context.getExecutive());
+            context.setModified(LocalDateTime.now());
         }
     }
 

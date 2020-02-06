@@ -37,7 +37,7 @@ Authorization: Basic user pass
 {
   "id": 3,
   "templateName": "operating",
-  "templateDescription": "template for operating",
+  "templateDescription": "operating",
   "applications": [
     {
       "id": 3,

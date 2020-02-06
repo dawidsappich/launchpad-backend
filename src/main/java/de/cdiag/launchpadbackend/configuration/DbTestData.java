@@ -26,11 +26,11 @@ public class DbTestData {
         return args -> {
 
             final Launchpad launchpad = new Launchpad();
-            launchpad.setTitle("MyHome");
-            final Template invoiceTemplate = new Template("invoice", "template for accounting");
-            final Template scheduleTemplate = new Template("schedule", "template for schedules");
-            final Template warehouseTemplate = new Template("warehouse", "template for warehouse");
-            final Template operatingTemplate = new Template("operating", "template for operating");
+            launchpad.setTitle("My Applications");
+            final Template invoiceTemplate = new Template("invoice", "accounting");
+            final Template scheduleTemplate = new Template("schedule", "schedules");
+            final Template warehouseTemplate = new Template("warehouse", "warehouse");
+            final Template operatingTemplate = new Template("operating", "operating");
 
             // collect templates into collection to be persisted
             // these templates are not related to a launchpad
@@ -73,7 +73,7 @@ public class DbTestData {
             operatingTemplate.setApplications(remainingApps);
 
             final Tile invoiceTile = new Tile("my invoices", "all invoices in progress", invoices);
-            invoiceTile.setIcon("invoice-icon");
+            invoiceTile.setIcon("faFileInvoice");
             // set relationship to launchpad
             invoiceTile.setLaunchpad(launchpad);
             Set<Tile> tiles = new HashSet<>();
@@ -85,6 +85,7 @@ public class DbTestData {
             User qualityAssurance = new User("qa", "pass");
             User productOwner = new User("po", "pass");
             User normalUser = new User("user", "pass");
+            User adminUser = new User("admin", "pass");
 
             // add a launchpad for the normal user
             normalUser.setLaunchpad(launchpad);
@@ -93,6 +94,7 @@ public class DbTestData {
             users.add(qualityAssurance);
             users.add(productOwner);
             users.add(normalUser);
+            users.add(adminUser);
 
             userService.save(users);
             userService.saveTemplates(templates);

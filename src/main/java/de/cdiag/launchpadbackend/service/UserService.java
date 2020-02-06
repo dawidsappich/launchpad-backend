@@ -152,7 +152,6 @@ public class UserService implements UserDetailsService {
         final Tile tile = new Tile(template.getTemplateName(), template.getTemplateDescription(), app);
         // create relationship to launchpad
         tile.setLaunchpad(launchpad);
-        tile.setIcon("icon-operating");
         return tile;
     }
 
