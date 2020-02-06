@@ -1,6 +1,7 @@
 package de.cdiag.launchpadbackend.handler;
 
 import de.cdiag.launchpadbackend.exception.NotFoundException;
+import de.cdiag.launchpadbackend.exception.UserAlreadyExistsException;
 import de.cdiag.launchpadbackend.message.ResponseMessage;
 import org.springframework.context.ApplicationContextException;
 import org.springframework.http.HttpStatus;
@@ -20,7 +21,7 @@ public class RestResponseEntityExceptionHandler {
         return new ResponseEntity<>(message, HttpStatus.UNAUTHORIZED);
     }
 
-    @ExceptionHandler({ApplicationContextException.class, NotFoundException.class})
+    @ExceptionHandler({ApplicationContextException.class, NotFoundException.class, UserAlreadyExistsException.class})
     protected ResponseEntity<ResponseMessage> handleAppContextConflict(RuntimeException ex, WebRequest request) {
         final var message = getMessage(ex);
         return new ResponseEntity<>(message, HttpStatus.CONFLICT);

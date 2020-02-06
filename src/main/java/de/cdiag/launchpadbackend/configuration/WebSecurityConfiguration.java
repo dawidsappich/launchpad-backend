@@ -38,11 +38,15 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         // disable in favor of h2
         http.csrf().disable();
 
+        // enable CORS
+        http.cors();
+
         // all request must be authenticated
         http.authorizeRequests()
                 // allow any request to h2-console
                 .antMatchers("/h2-console/**").permitAll()
                 .antMatchers("/user/login").permitAll()
+                .antMatchers("/user/signup").permitAll()
                 .anyRequest()
                 .authenticated();
     }
@@ -53,29 +57,3 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
 }
 
-@Component
-class CustomAuthProvider implements AuthenticationProvider {
-
-    private final UserService userService;
-
-    CustomAuthProvider(UserService userService) {
-        this.userService = userService;
-    }
-
-    @Override
-    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        String username = authentication.getName();
-        String password = authentication.getCredentials().toString();
-
-        // does provided password match with the password in storage?
-        if (userService.matches(username, password)) {
-            return new UsernamePasswordAuthenticationToken(username, password, AuthorityUtils.createAuthorityList("USER"));
-        }
-        throw new BadCredentialsException("username or password invalid");
-    }
-
-    @Override
-    public boolean supports(Class<?> authentication) {
-        return UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication);
-    }
-}

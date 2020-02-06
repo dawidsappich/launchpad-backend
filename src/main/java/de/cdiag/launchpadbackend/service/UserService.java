@@ -1,6 +1,7 @@
 package de.cdiag.launchpadbackend.service;
 
 import de.cdiag.launchpadbackend.exception.NotFoundException;
+import de.cdiag.launchpadbackend.exception.UserAlreadyExistsException;
 import de.cdiag.launchpadbackend.model.*;
 import de.cdiag.launchpadbackend.repository.AppRepository;
 import de.cdiag.launchpadbackend.repository.LaunchpadRepository;
@@ -47,7 +48,7 @@ public class UserService implements UserDetailsService {
         return userRepository.save(user);
     }
 
-    private String encodePassword(final String password) {
+    protected String encodePassword(final String password) {
         return passwordEncoder().encode(password);
     }
 
@@ -99,7 +100,7 @@ public class UserService implements UserDetailsService {
         final Optional<User> byUsername = userRepository.findByUsername(username);
         if (byUsername.isEmpty()) {
             // error is handled in RestResponseEntityExceptionHandler
-            throw new UsernameNotFoundException("user with username '" + username + "' not found");
+            throw new UsernameNotFoundException("user not found");
         }
         return byUsername.get();
     }
@@ -118,6 +119,7 @@ public class UserService implements UserDetailsService {
         return templateRepository.findAll();
     }
 
+    // add transaction handling
     public Tile addTileToUserLaunchpad(Template template, String userName) {
 
         final Launchpad launchpad = loadLaunchpad(userName);
@@ -138,7 +140,8 @@ public class UserService implements UserDetailsService {
         tiles.add(tile);
 
         // save launchpad (or user?)
-        launchpadRepository.save(launchpad);
+        final Launchpad launchpad_updated = launchpadRepository.save(launchpad);
+        // return the tile form the launchpad
 
         return tile;
     }
@@ -149,15 +152,14 @@ public class UserService implements UserDetailsService {
         final Tile tile = new Tile(template.getTemplateName(), template.getTemplateDescription(), app);
         // create relationship to launchpad
         tile.setLaunchpad(launchpad);
-        tile.setIcon("icon-operating");
         return tile;
     }
 
-    public App updateApplication(String username, App providedApp) {
+    public App updateApplication(App providedApp) {
         // find the application
         final Optional<App> appById = appRepository.findById(providedApp.getId());
         if (appById.isEmpty()) {
-            throw new NotFoundException("application with id: " + providedApp.getId() + " not found");
+            throw new NotFoundException("application not found");
         }
 
         // update the application
@@ -170,5 +172,14 @@ public class UserService implements UserDetailsService {
 
         //return the updated
         return savedApp;
+    }
+
+    public User register(User user) {
+        // check if user already exists
+        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
+            throw new UserAlreadyExistsException("username already exists.");
+        }
+        user.setPassword(encodePassword(user.getPassword()));
+        return userRepository.save(user);
     }
 }
