@@ -3,10 +3,7 @@ package de.cdiag.launchpadbackend.service;
 import de.cdiag.launchpadbackend.exception.NotFoundException;
 import de.cdiag.launchpadbackend.exception.UserAlreadyExistsException;
 import de.cdiag.launchpadbackend.model.*;
-import de.cdiag.launchpadbackend.repository.AppRepository;
-import de.cdiag.launchpadbackend.repository.LaunchpadRepository;
-import de.cdiag.launchpadbackend.repository.TemplateRepository;
-import de.cdiag.launchpadbackend.repository.UserRepository;
+import de.cdiag.launchpadbackend.repository.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,6 +12,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -29,12 +27,14 @@ public class UserService implements UserDetailsService {
     private final LaunchpadRepository launchpadRepository;
     private final TemplateRepository templateRepository;
     private final AppRepository appRepository;
+    private final TileRepository tileRepository;
 
-    public UserService(UserRepository userRepository, LaunchpadRepository launchpadRepository, TemplateRepository templateRepository, AppRepository appRepository) {
+    public UserService(UserRepository userRepository, LaunchpadRepository launchpadRepository, TemplateRepository templateRepository, AppRepository appRepository, TileRepository tileRepository) {
         this.userRepository = userRepository;
         this.launchpadRepository = launchpadRepository;
         this.templateRepository = templateRepository;
         this.appRepository = appRepository;
+        this.tileRepository = tileRepository;
     }
 
     @Bean
@@ -79,6 +79,7 @@ public class UserService implements UserDetailsService {
         return passwordEncoder().matches(rawPassword, userPassword);
     }
 
+    @Transactional
     public Iterable<? extends User> save(List<? extends User> users) {
         // hash all passwords
         users.forEach(user -> user.setPassword(encodePassword(user.getPassword())));
@@ -111,6 +112,7 @@ public class UserService implements UserDetailsService {
         return matches(username, providedUser.getPassword());
     }
 
+    @Transactional
     public void saveTemplates(Set<Template> templates) {
         templateRepository.saveAll(templates);
     }
@@ -120,6 +122,7 @@ public class UserService implements UserDetailsService {
     }
 
     // add transaction handling
+    @Transactional
     public Tile addTileToUserLaunchpad(Template template, String userName) {
 
         final Launchpad launchpad = loadLaunchpad(userName);
@@ -155,25 +158,27 @@ public class UserService implements UserDetailsService {
         return tile;
     }
 
-    public App updateApplication(App providedApp) {
+    @Transactional
+    public Tile updateTile(Tile providedTile) {
         // find the application
-        final Optional<App> appById = appRepository.findById(providedApp.getId());
-        if (appById.isEmpty()) {
-            throw new NotFoundException("application not found");
+        final Optional<Tile> tileById = tileRepository.findById(providedTile.getId());
+        if (tileById.isEmpty()) {
+            throw new NotFoundException("tile not found");
         }
 
-        // update the application
-        final App app = appById.get();
-        app.setAppName(providedApp.getAppName());
-        app.setAppDescription(providedApp.getAppDescription());
+        // update the tile
+        final Tile tile = tileById.get();
+        tile.setTitle(providedTile.getTitle());
+        tile.setDescription(providedTile.getDescription());
 
-        //persist the application
-        final App savedApp = appRepository.save(app);
+        //persist the tile
+        final Tile savedTile = tileRepository.save(tile);
 
-        //return the updated
-        return savedApp;
+        //return the updated tile
+        return savedTile;
     }
 
+    @Transactional
     public User register(User user) {
         // check if user already exists
         if (userRepository.findByUsername(user.getUsername()).isPresent()) {

@@ -60,6 +60,26 @@ public class LaunchpadController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @ApiOperation("update the tile metadata")
+    @PatchMapping("tile")
+    public ResponseEntity<ResponseMessage> updateTile(@RequestBody Tile tile) {
+
+        // get the username from the security context
+        final String username = getUserName();
+
+        final Tile updatedTile = userService.updateTile(tile);
+
+        String payload = null;
+        try {
+            payload = asJson(updatedTile);
+        } catch (JsonProcessingException e) {
+            handleException(e);
+        }
+
+        final ResponseMessage response = new ResponseMessage(Message.Status.OK, "tile updated", payload);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
 
 
     //  ##### APPLICATION #####
@@ -76,26 +96,6 @@ public class LaunchpadController {
         final ResponseMessage response = new ResponseMessage(Message.Status.OK, "started");
         response.setPayload(context.toString());
 
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
-
-    @ApiOperation("update the applications metadata")
-    @PatchMapping("application")
-    public ResponseEntity<ResponseMessage> updateApplication(@RequestBody App application) {
-
-        // get the username from the security context
-        final String username = getUserName();
-
-        final App updatedApp = userService.updateApplication(application);
-
-        String payload = null;
-        try {
-            payload = asJson(updatedApp);
-        } catch (JsonProcessingException e) {
-            handleException(e);
-        }
-
-        final ResponseMessage response = new ResponseMessage(Message.Status.OK, "application updated", payload);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
