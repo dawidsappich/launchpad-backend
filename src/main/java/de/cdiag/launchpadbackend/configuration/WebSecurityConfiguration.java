@@ -1,19 +1,10 @@
 package de.cdiag.launchpadbackend.configuration;
 
-import de.cdiag.launchpadbackend.service.UserService;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.stereotype.Component;
 
 @Configuration
 @EnableWebSecurity
@@ -37,9 +28,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
         // disable in favor of h2
         http.csrf().disable();
-
-        // enable CORS
-        http.cors();
 
         // all request must be authenticated
         http.authorizeRequests()

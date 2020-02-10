@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("user")
-@CrossOrigin
 @Api(description = "operation for the login")
 public class UserController {
 

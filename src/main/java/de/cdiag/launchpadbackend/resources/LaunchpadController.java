@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("launchpad")
-@CrossOrigin
 @Slf4j
 @Api(description = "operations regarding templates, tiles, apps and the launchpad")
 public class LaunchpadController {
