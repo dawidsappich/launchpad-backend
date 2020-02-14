@@ -1,0 +1,39 @@
+# Stage 1
+## Purpose: build the maven artifact
+FROM maven:3.6.3-jdk-11 AS BASE_BUILD
+
+RUN apt-get update -y
+
+# set environment vars
+ENV WORKDIR=/code
+## target dir for maven
+ENV TARGETDIR=$WORKDIR/target
+ENV APPDIR=/usr/app
+
+WORKDIR $WORKDIR
+# copy the sourcecode into the container src folder
+ADD src $WORKDIR/src
+
+# copy the maven files into the container
+ADD mvnw $WORKDIR/mvnw
+ADD mvnw.cmd $WORKDIR/mvnw.cmd
+ADD pom.xml $WORKDIR/pom.xml
+
+# build the artifact (skip tests)
+RUN mvn -DskipTests clean package
+# cerate the application directory
+RUN mkdir -p $APPDIR
+RUN mv $TARGETDIR/launchpad-backend-0.0.1-SNAPSHOT.jar $APPDIR/launchpad-backend.jar
+
+# Stage 2
+## get the artifact from stage 1 and execute it
+FROM openjdk:11-jdk-slim-buster
+
+ENV APPDIR=/usr/app
+
+WORKDIR $APPDIR
+
+# copy the artifact to the current stage in the current folder (root folder)
+COPY --from=BASE_BUILD $APPDIR/launchpad-backend.jar .
+
+ENTRYPOINT exec java -jar $APPDIR/launchpad-backend.jar

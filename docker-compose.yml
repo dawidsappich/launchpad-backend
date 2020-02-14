@@ -1,0 +1,11 @@
+version: '3.3'
+
+services:
+  launchpad-backend:
+    hostname: localhost
+    container_name: launchpad-backend
+    build:
+      context: .
+      dockerfile: launchpad-backend.df
+    ports:
+    - 8080:8080

@@ -17,13 +17,13 @@ public class RestResponseEntityExceptionHandler {
 
     @ExceptionHandler({UsernameNotFoundException.class, BadCredentialsException.class})
     protected ResponseEntity<ResponseMessage> handleConflict(RuntimeException ex, WebRequest request) {
-        final var message = getMessage(ex);
+        final ResponseMessage message = getMessage(ex);
         return new ResponseEntity<>(message, HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler({ApplicationContextException.class, NotFoundException.class, UserAlreadyExistsException.class})
     protected ResponseEntity<ResponseMessage> handleAppContextConflict(RuntimeException ex, WebRequest request) {
-        final var message = getMessage(ex);
+        final ResponseMessage message = getMessage(ex);
         return new ResponseEntity<>(message, HttpStatus.CONFLICT);
     }
 
